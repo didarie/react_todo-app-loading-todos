@@ -7,11 +7,12 @@ import { Todo } from './types/Todo';
 import classNames from 'classnames';
 import { TodoList } from './TodoList';
 import { TodoFooter } from './TodoFooter';
+import { TodoFilter } from './types/TodoFilter';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [error, setError] = useState('');
-  const [filter, setFilter] = useState('all');
+  const [filter, setFilter] = useState<TodoFilter>(TodoFilter.All);
   const [completed, setCompleted] = useState<Todo | null>(null);
 
   const loadTodos = async () => {
@@ -38,9 +39,9 @@ export const App: React.FC = () => {
 
   const filteredTodos = todos.filter(todo => {
     switch (filter) {
-      case 'active':
+      case TodoFilter.Active:
         return !todo.completed;
-      case 'completed':
+      case TodoFilter.Completed:
         return todo.completed;
       default:
         return true;
@@ -65,7 +66,9 @@ export const App: React.FC = () => {
           {todos.length > 0 && (
             <button
               type="button"
-              className={classNames('todoapp__toggle-all', { active: todos })}
+              className={classNames('todoapp__toggle-all', {
+                active: todos.every(todo => todo.completed),
+              })}
               data-cy="ToggleAllButton"
             />
           )}
@@ -90,7 +93,7 @@ export const App: React.FC = () => {
         {todos.length > 0 && (
           <TodoFooter
             filter={filter}
-            onChange={setFilter}
+            onChange={e => setFilter(e)}
             activeItems={todos.length - completedTodos.length}
           />
         )}

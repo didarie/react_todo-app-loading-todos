@@ -1,9 +1,10 @@
 import classNames from 'classnames';
 import React from 'react';
+import { TodoFilter } from './types/TodoFilter';
 
 interface Props {
   filter: string;
-  onChange: (filter: string) => void;
+  onChange: (filter: TodoFilter) => void;
   activeItems: number;
 }
 
@@ -20,36 +21,19 @@ export const TodoFooter: React.FC<Props> = ({
 
       {/* Active link should have the 'selected' class */}
       <nav className="filter" data-cy="Filter">
-        <a
-          href="#/"
-          className={classNames('filter__link', { selected: filter === 'all' })}
-          data-cy="FilterLinkAll"
-          onClick={() => onChange('all')}
-        >
-          All
-        </a>
-
-        <a
-          href="#/active"
-          className={classNames('filter__link', {
-            selected: filter === 'active',
-          })}
-          data-cy="FilterLinkActive"
-          onClick={() => onChange('active')}
-        >
-          Active
-        </a>
-
-        <a
-          href="#/completed"
-          className={classNames('filter__link', {
-            selected: filter === 'completed',
-          })}
-          data-cy="FilterLinkCompleted"
-          onClick={() => onChange('completed')}
-        >
-          Completed
-        </a>
+        {Object.values(TodoFilter).map(filterOption => (
+          <a
+            key={filterOption}
+            href="#/"
+            className={classNames('filter__link', {
+              selected: filterOption === filter,
+            })}
+            data-cy={`FilterLink${filterOption.charAt(0).toUpperCase() + filterOption.slice(1)}`}
+            onClick={() => onChange(filterOption)}
+          >
+            {filterOption.charAt(0).toUpperCase() + filterOption.slice(1)}
+          </a>
+        ))}
       </nav>
 
       {/* this button should be disabled if there are no completed todos */}

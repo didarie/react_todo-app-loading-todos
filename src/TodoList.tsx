@@ -10,29 +10,26 @@ interface Props {
 export const TodoList: React.FC<Props> = ({ todos, onCompleted }) => {
   return (
     <section className="todoapp__main" data-cy="TodoList">
-      {todos.map(todo => (
+      {todos.map(({ title, id, completed }) => (
         <div
           data-cy="Todo"
-          className={classNames('todo', { completed: todo.completed })}
-          key={todo.id}
+          className={classNames('todo', { completed })}
+          key={id}
         >
-          <label
-            className="todo__status-label"
-            htmlFor={`todo-status-${todo.id}`}
-          >
+          <label className="todo__status-label" htmlFor={`todo-status-${id}`}>
             <input
-              id={`todo-status-${todo.id}`}
+              id={`todo-status-${id}`}
               data-cy="TodoStatus"
               type="checkbox"
               className="todo__status"
-              checked={todo.completed}
-              onChange={() => onCompleted(todo)}
+              checked={completed}
+              onChange={() => onCompleted(todos[id])}
             />
             {/* accessible text for the label */}
           </label>
 
           <span data-cy="TodoTitle" className="todo__title">
-            {todo.title}
+            {title}
           </span>
           <button type="button" className="todo__remove" data-cy="TodoDelete">
             ×
